@@ -8,4 +8,9 @@ class Account extends Model
 {
     protected $fillable = ['name'];
 
+    public function isSuspended()
+    {
+        return false;
+    }
+
 }

@@ -37,6 +37,9 @@ class Order extends Model
         return $this->amount;
     }
 
+    /**
+     * @return Account
+     */
     public function getAccount()
     {
         return $this->account;

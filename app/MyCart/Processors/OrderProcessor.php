@@ -17,22 +17,26 @@ use Exception;
 class OrderProcessor
 {
     protected $orders;
+    private   $validators;
 
     /**
      * OrderProcessor constructor.
      */
-    public function __construct(BillerInterface $biller, OrderRepository $orders)
+    public function __construct(
+        BillerInterface $biller,
+        OrderRepository $orders,
+        array $validators = []
+    )
     {
         $this->biller = $biller;
         $this->orders = $orders;
+        $this->validators = $validators;
     }
 
     public function process(Order $order)
     {
-        $recent = $this->orders->getRecentOrderCount($order);
-
-        if ($recent > 0) {
-            throw new Exception('Duplicate order likely.');
+        foreach ($this->validators as $validator) {
+            $validator->validate($order);
         }
 
         $this->biller->bill($order->getAccount()->id, $order->getAmount());
